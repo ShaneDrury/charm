@@ -10,6 +10,7 @@ mes = PseudoscalarMeson.load_from_folder(folders, fit_range=(8, 31),
                                          name="0.005_0.005",
                                          lattice=my_lattice,
                                          fit_type='simultaneous',
+                                         mass_guess=0.188,
                                          covariant=True,
                                          correlated=False, frozen_error=True,
                                          num_bins=2, verbose=False)
@@ -17,3 +18,4 @@ mes = PseudoscalarMeson.load_from_folder(folders, fit_range=(8, 31),
 #mes.plot_graph()
 if mes.fit():
     print mes.get_fit_params()
+    print mes.get_fit_params_latex()
