@@ -10,57 +10,19 @@ from pyon.Error.error_reduce import extend
 from pyon import glob_consts
 from pyon.Fitting import extrapolation
 from pyon.IO import prettify
+from charm.scripts.masses.ratios import komega32_0_006_0_0273_0_0273 as k32
+from charm.scripts.masses.mesons import m24_0_005_0_005, m24_0_01_0_01, m24_0_005_0_0348, m24_0_01_0_0348
+from charm.scripts.masses.baryons import b24_0_0348
 import pylab
 
-my_lattice = lattice.Lattice24c()
-mfolders = ('/export/scratch/srd1g10/results/24c/mesons/0.005_0.005/','/export/scratch/srd1g10/results/24c/mesons/0.01_0.01/')
-bfolder = '/export/scratch/srd1g10/results/24c/baryons/0.005_0.005_0.0348/'
-mpimomega32 = 0.1960
-mpimomega24 = []
-mpimomega24j = []
-bfolder='/export/scratch/srd1g10/results/24c/baryons/0.005_0.005_0.0348/'
-bfolders = (bfolder+'pickled.b14.p16/', bfolder+'pickled.b15.p16/', bfolder+'pickled.b16.p16/')
-bar = Baryon.load_from_folder(bfolders, fit_range=(9, 17),
-                              name="$0.0348^3$",
-                              lattice=my_lattice,
-                              fit_type='individual',
-                              average_over_folders=True,
-                              mass_guess=1.0,
-                              covariant=True,
-                              correlated=False, frozen_error=True,
-                              num_bins=2, verbose=False)
-#bar.plot_graph()
-if bar.fit():
-    #print bar.get_fit_params()
-    print bar.get_fit_params_latex()
-    bjl=bar.get_jackknife_lists()
+mpimomega32 = 0.1960 # Our target
 
-
-names = ["(0.005, 0.005)", "(0.01, 0.01)"]
-fit_ranges = [(8, 31), (9, 31)]
-for mfolder, name, fit_range in zip(mfolders, names, fit_ranges): # Get m_pi/m_omega for both light masses
-    gf = (mfolder+'pickled.g15.g15.p16/', mfolder+'pickled.g7.g7.p16/', mfolder+'pickled.g7.g15.p16/')
-
-    mes = PseudoscalarMeson.load_from_folder(gf, fit_range=fit_range,
-                                             name=name,
-                                             lattice=my_lattice,
-                                             fit_type='simultaneous',
-                                             covariant=True,
-                                             correlated=False, frozen_error=True,
-                                             num_bins=2, verbose=False)
-    if mes.fit():
-        #print mes.get_fit_params()
-        print mes.get_fit_params_latex()
-        mjl=mes.get_jackknife_lists()
-
-    jack_lists = mjl/bjl
-    central = np.average(jack_lists, axis=0)
-    error = error_reduce.jackknife(central, jack_lists)
-    mpimomega24j.append(jack_lists)
-    mpimomega24.append(central)
-    
-    #print "m_pi/m_omega", central, error
-    print mes.name + ",", bar.name, "&", prettify.bracket_error(central, error), "\\\ \hline"
+m24jl_005 = m24_0_005_0_005.get_mass()
+m24jl_01 = m24_0_01_0_01.get_mass()
+b24jl_0348 = b24_0_0348.get_mass()
+mpimomega24j = np.array([m24jl_005, m24jl_01])
+mpimomega24j = mpimomega24j / b24jl_0348
+mpimomega24 = np.average(mpimomega24j, axis=1)
 
 x = [0.005+glob_consts.mres24, 0.01+glob_consts.mres24]
 meas1 = lambda data: extrapolation.m_pi_m_omega_get_params(data, x) # Get fit params
@@ -90,37 +52,10 @@ pylab.plot([central], [ext_ratio], 'x', color='red')
 #pylab.show()
 
 # Now do same for LH
-
-names = ["(0.005, 0.0348)", "(0.01, 0.0348)"]
-fit_ranges = [(8, 31), (8, 31)]
-mkmomega24 = []
-mkmomega24j = []
-
-mfolders = ('/export/scratch/srd1g10/results/24c/mesons/0.005_0.0348/','/export/scratch/srd1g10/results/24c/mesons/0.01_0.0348/')
-
-for mfolder, name, fit_range in zip(mfolders, names, fit_ranges): # Get m_K/m_omega for both light masses
-    gf = (mfolder+'pickled.g15.g15.p16/', mfolder+'pickled.g7.g7.p16/', mfolder+'pickled.g7.g15.p16/')
-
-    mes = PseudoscalarMeson.load_from_folder(gf, fit_range=fit_range,
-                                             name=name,
-                                             lattice=my_lattice,
-                                             fit_type='simultaneous',
-                                             covariant=True,
-                                             correlated=False, frozen_error=True,
-                                             num_bins=2, verbose=False)
-    if mes.fit():
-        #print mes.get_fit_params()
-        print mes.get_fit_params_latex()
-        mjl=mes.get_jackknife_lists()
-
-    jack_lists = mjl/bjl
-    central = np.average(jack_lists, axis=0)
-    error = error_reduce.jackknife(central, jack_lists)
-    mkmomega24j.append(jack_lists)
-    mkmomega24.append(central)
-
-    print mes.name + ",", bar.name, "&", prettify.bracket_error(central, error), "\\\ \hline"
-
+m24jlLH1 = m24_0_005_0_0348.get_mass()
+m24jlLH2 = m24_0_01_0_0348.get_mass()
+mkmomega24j = np.array([m24jlLH1, m24jlLH2]) / b24jl_0348
+mkmomega24 = np.average(mkmomega24j, axis=1)
 x = [0.005+glob_consts.mres24, 0.01+glob_consts.mres24]
 meas1 = lambda data: extrapolation.m_k_m_omega_get_params2(data, x) # Get fit params
 meas2 = lambda m,(a,b): extrapolation.m_k_m_omega_get_r2(m,a,b)
@@ -131,49 +66,16 @@ jratios = map(meas2, np.array(jmasses) + glob_consts.mres24, params)
 central = np.average(jratios, axis=0)
 error = error_reduce.jackknife(central, jratios)
 print "m_K/m_omega @ m_l", central, error
-print "("+prettify.bracket_error(m_l, m_l_err) +", "+ prettify.bracket_error(m_l, m_l_err)+ ")" + ",", bar.name, "&", prettify.bracket_error(central, error), "\\\ \hline"
+print "("+prettify.bracket_error(m_l, m_l_err) +", "+ prettify.bracket_error(m_l, m_l_err)+ ")" + ",", b24_0_0348.bar.name, "&", prettify.bracket_error(central, error), "\\\ \hline"
 
 
 print "Ratio"
-my_lattice = lattice.Lattice32c()
-d = '/export/scratch/srd1g10/results/32c/mesons/0.006_0.0273/'
-folders = (d+'pickled.g15.g15.p16/', d+'pickled.g7.g7.p16/', d+'pickled.g7.g15.p16/')
-
-mes = PseudoscalarMeson.load_from_folder(folders, fit_range=(10, 31),
-                                         name="(0.006, 0.0273)",
-                                         lattice=my_lattice,
-                                         fit_type='simultaneous',
-                                         mass_guess=0.24,
-                                         covariant=True,
-                                         correlated=False, frozen_error=True,
-                                         num_bins=2, verbose=False)
-print "Meson"
-mes.fit()
-mjl = mes.get_jackknife_lists()
-print mes.get_fit_params_latex()
-
-bfolder='/export/scratch/srd1g10/results/32c/baryons/0.006_0.006_0.0273/'
-bfolders = (bfolder+'pickled.b14.p16/', bfolder+'pickled.b15.p16/', bfolder+'pickled.b16.p16/')
-bar = Baryon.load_from_folder(bfolders, fit_range=(11, 23),
-                              name="$0.0273^3$",
-                              lattice=my_lattice,
-                              fit_type='individual',
-                              average_over_folders=True,
-                              mass_guess=0.77,
-                              covariant=True,
-                              correlated=False, frozen_error=True,
-                              num_bins=2, verbose=False)
-print "Baryon"
-bar.fit()
-bjl = bar.get_jackknife_lists()
-print bar.get_fit_params_latex()
-
-ratiojl = mjl/bjl
+ratiojl = k32.get_ratio()
 central = np.average(ratiojl, axis=0)
 error = error_reduce.jackknife(central, ratiojl)
 print "m_pi / m_omega"
 print central, error
-print mes.name + ",", bar.name, "&", prettify.bracket_error(central, error), "\\\ \hline"
+print k32.m32.mes.name + ",", k32.b32.bar.name, "&", prettify.bracket_error(central, error), "\\\ \hline"
 
 def S(a,b):
     return a/b
@@ -184,5 +86,5 @@ Sjl = S(R_24, R_32)
 S_central = np.average(Sjl, axis=0)
 S_err = error_reduce.jackknife(S_central, Sjl)
 print S_central, S_err
-print mes.name + ",", bar.name, "&", prettify.bracket_error(S_central, S_err), "\\\ \hline"
+print "Ratio", prettify.bracket_error(S_central, S_err)
 
