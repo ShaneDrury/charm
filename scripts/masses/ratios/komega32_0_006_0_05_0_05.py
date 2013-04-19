@@ -1,8 +1,8 @@
 from pyon.Error.error_reduce import mean_and_error
 from pyon.IO import prettify
 import numpy as np
-from charm.scripts.masses.mesons import m32_0_006_0_0273 as m32
-from charm.scripts.masses.baryons import b32_0_0273 as b32
+from charm.scripts.masses.mesons import m32_0_006_0_05 as m32
+from charm.scripts.masses.baryons import b32_0_05 as b32
 
 FIT = True
 def get_ratio():

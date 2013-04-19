@@ -4,15 +4,15 @@ from pyon.Classes import lattice
 #from pyon.Error import error_reduce
 #import numpy as np
 FIT = True
-my_lattice = lattice.Lattice24c()
-bfolder = '/export/scratch/srd1g10/results/24c/baryons/0.005_0.005_0.0348/'
+my_lattice = lattice.Lattice32c()
+bfolder = '/export/scratch/srd1g10/results/32c/baryons/0.006_0.006_0.05/'
 bfolders = (bfolder+'pickled.b14.p16/', bfolder+'pickled.b15.p16/', bfolder+'pickled.b16.p16/')
-bar = Baryon.load_from_folder(bfolders, fit_range=(9, 17),
-                              name="$0.0348^3$",
+bar = Baryon.load_from_folder(bfolders, fit_range=(12, 26),
+                              name="$0.05^3$",
                               lattice=my_lattice,
                               fit_type='individual',
                               average_over_folders=True,
-                              mass_guess=1.0,
+                              mass_guess=0.89,
                               covariant=True,
                               correlated=False, frozen_error=True,
                               num_bins=2, verbose=False)
