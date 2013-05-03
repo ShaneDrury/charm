@@ -92,6 +92,6 @@ R_32 = np.array(R_32)
 Sjl = R_24 / R_32
 S_central, S_err = mean_and_error(Sjl)
 
-print S_central, S_err
+print S_central, S_err # m_k / m_omega ratio
 print "Ratio S", prettify.bracket_error(S_central, S_err)
 
