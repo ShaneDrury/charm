@@ -2,9 +2,9 @@ from pyon.Classes.hadron import PseudoscalarMeson
 from pyon.Classes import lattice
 #from pyon.Error import error_reduce
 #import numpy as np
-FIT=True
+FIT=False
 my_lattice = lattice.Lattice24c()
-d = '/export/scratch/srd1g10/results/24c/mesons/0.005_0.005/'
+d = '/temp/srd1g10/results/24c/mesons/0.005_0.005/'
 folders = (d+'pickled.g15.g15.p16/', d+'pickled.g7.g7.p16/', d+'pickled.g7.g15.p16/')
 
 mes = PseudoscalarMeson.load_from_folder(folders, fit_range=(8, 31),

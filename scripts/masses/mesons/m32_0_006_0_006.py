@@ -4,7 +4,7 @@ from pyon.Classes import lattice
 #import numpy as np
 FIT=True
 my_lattice = lattice.Lattice32c()
-d = '/export/scratch/srd1g10/results/32c/mesons/0.006_0.006/'
+d = '/temp/srd1g10/results/32c/mesons/0.006_0.006/'
 folders = (d+'pickled.g15.g15.p16/', d+'pickled.g7.g7.p16/', d+'pickled.g7.g15.p16/')
 
 mes = PseudoscalarMeson.load_from_folder(folders, fit_range=(9, 31),

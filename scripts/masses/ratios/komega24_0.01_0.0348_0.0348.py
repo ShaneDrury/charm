@@ -7,7 +7,7 @@ import numpy as np
 FIT=True
 
 my_lattice = lattice.Lattice24c()
-d ='/export/scratch/srd1g10/results/24c/mesons/0.01_0.0348/'
+d ='/temp/srd1g10/results/24c/mesons/0.01_0.0348/'
 folders = (d+'pickled.g15.g15.p16/', d+'pickled.g7.g7.p16/', d+'pickled.g7.g15.p16/')
 
 mes = PseudoscalarMeson.load_from_folder(folders, fit_range=(8, 31),
@@ -28,7 +28,7 @@ else:
     pass
     #mes.plot_graph()
 
-bfolder='/export/scratch/srd1g10/results/24c/baryons/0.005_0.005_0.0348/'
+bfolder='/temp/srd1g10/results/24c/baryons/0.005_0.005_0.0348/'
 bfolders = (bfolder+'pickled.b14.p16/', bfolder+'pickled.b15.p16/', bfolder+'pickled.b16.p16/')
 bar = Baryon.load_from_folder(bfolders, fit_range=(9, 17),
                               name="$0.0348^3$",

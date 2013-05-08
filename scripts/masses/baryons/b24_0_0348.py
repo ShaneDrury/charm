@@ -5,7 +5,7 @@ from pyon.Classes import lattice
 #import numpy as np
 FIT = True
 my_lattice = lattice.Lattice24c()
-bfolder = '/export/scratch/srd1g10/results/24c/baryons/0.005_0.005_0.0348/'
+bfolder = '/temp/srd1g10/results/24c/baryons/0.005_0.005_0.0348/'
 bfolders = (bfolder+'pickled.b14.p16/', bfolder+'pickled.b15.p16/', bfolder+'pickled.b16.p16/')
 bar = Baryon.load_from_folder(bfolders, fit_range=(9, 17),
                               name="$0.0348^3$",
