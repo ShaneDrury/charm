@@ -27,7 +27,7 @@ theory = Gnuplot.Data(zip(masses, th), with_='lines lt 2')
 
 #g('set output "my-plot.ps"')
 g.plot(data, theory)
-g.hardcopy('my-plot-0_005-uncorrelated.eps', enhanced=1, color=1)
+#g.hardcopy('my-plot-0_005-uncorrelated.eps', enhanced=1, color=1)
 
 
 #data = Gnuplot.Data(zip(x, y, error))

@@ -2,7 +2,7 @@ from pyon.Classes.hadron import PseudoscalarMeson
 from pyon.Classes import lattice
 #from pyon.Error import error_reduce
 #import numpy as np
-FIT=False
+FIT=True
 my_lattice = lattice.Lattice24c()
 d = '/temp/srd1g10/results/24c/mesons/0.005_0.005/'
 folders = (d+'pickled.g15.g15.p16/', d+'pickled.g7.g7.p16/', d+'pickled.g7.g15.p16/')
@@ -25,5 +25,6 @@ if __name__== "__main__":
         mes.fit()
         print mes.get_fit_params()
         print mes.get_fit_params_latex()
+        print mes.chi2dof
     else:
         mes.plot_graph()

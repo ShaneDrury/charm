@@ -19,9 +19,10 @@ for folder, fit_range, guess, name in zip(folders, fit_ranges, guesses, names):
                                              fit_type='individual',
                                              mass_guess=guess,
                                              covariant=True,
-                                             correlated=False, frozen_error=True,
+                                             correlated=True, frozen_error=True,
                                              num_bins=2, verbose=False)
     mes.fit()
+    #print mes.get_fit_params()
     jl.append(mes.get_jackknife_lists())
 
 jl = np.array(jl)
